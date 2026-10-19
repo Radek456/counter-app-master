@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Odpočet do svátku</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="page-content">
+    <section aria-labelledby="holidays-heading" [attr.aria-busy]="loading()">
+      <h2 id="holidays-heading">Kolik dnů zbývá do…</h2>
+      <p>Vyberte český svátek a zobrazte počet zbývajících kalendářních dnů.</p>
+
+      <ion-button [disabled]="loading()" (click)="loadHolidays()">
+        {{ loading() ? 'Načítám…' : 'Načíst znovu' }}
+      </ion-button>
+
+      @if (loading()) {
+        <div class="state-message" role="status">
+          <ion-spinner aria-hidden="true"></ion-spinner>
+          <p>Načítám svátky…</p>
+        </div>
+      } @else if (errorMessage()) {
+        <p class="state-message error-message" role="alert">{{ errorMessage() }}</p>
+      } @else if (holidays().length === 0) {
+        <p class="state-message">Pro vybrané období nejsou žádné nadcházející svátky.</p>
+      } @else {
+        <ion-select
+          label="Vyberte svátek"
+          label-placement="stacked"
+          interface="alert"
+          cancel-text="Zrušit"
+          ok-text="Vybrat"
+          [value]="selectedId()"
+          (ionChange)="selectedId.set($event.detail.value)"
+        >
+          @for (holiday of holidays(); track holiday.id) {
+            <ion-select-option [value]="holiday.id">
+              {{ holiday.startDate | date: 'd. M. y' }} – {{ holidayName(holiday) }}
+            </ion-select-option>
+          }
+        </ion-select>
+
+        @if (selectedHoliday(); as holiday) {
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{ holidayName(holiday) }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{ holiday.startDate | date: 'd. M. y' }}</p>
+              <div aria-live="polite">
+                <p class="countdown-value">{{ remainingDays() }}</p>
+                @if (remainingDays() === 0) {
+                  <p>Svátek je dnes!</p>
+                } @else {
+                  <p>Počet dnů do svátku</p>
+                }
+              </div>
+              <p>Počítáno k {{ today() | date: 'd. M. y' }}.</p>
+            </ion-card-content>
+          </ion-card>
+        }
+      }
+    </section>
+
+    <section>
+      <h2>O aplikaci</h2>
+      <p>Autor: Radek Čechman</p>
+      <p>AP5PM 2026 – CounterApp</p>
+      <p>
+        Zdroj dat:
+        <a href="https://www.openholidaysapi.org/en/">OpenHolidays API</a>
+        (<a href="https://www.openholidaysapi.org/en/faq/">licence ODbL</a>).
+      </p>
+    </section>
+  </div>
+</ion-content>

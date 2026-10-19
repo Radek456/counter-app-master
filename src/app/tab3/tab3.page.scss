@@ -1,0 +1,39 @@
+.page-content {
+  max-width: 40rem;
+  margin: 1rem auto;
+}
+
+section + section {
+  margin-top: 2rem;
+}
+
+ion-select {
+  margin-top: 1rem;
+}
+
+ion-card {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+ion-card-title {
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.countdown-value {
+  margin: 1.5rem 0;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.state-message {
+  margin: 2rem 0;
+  color: var(--ion-color-medium);
+  text-align: center;
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+}
