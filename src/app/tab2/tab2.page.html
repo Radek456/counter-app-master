@@ -5,6 +5,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  @if (authError()) {
+  <p class="state-message">{{ authError() }}</p>
+  } @else if (auth.userId(); as uid) {
+  <p class="state-message">Anonymní uživatel: {{ uid }}</p>
+  } @else {
+  <p class="state-message">Přihlašuji…</p>
+  }
+
   @if (!counterService.initialized()) {
     <div class="state-message">
       <ion-spinner></ion-spinner>

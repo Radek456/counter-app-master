@@ -18,6 +18,7 @@ import {
   IonToolbar,
 } from '@ionic/angular';
 import { CounterService } from '../services/counter.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
 
 type SortOption = 'newest' | 'name' | 'value';
 
@@ -46,6 +47,8 @@ type SortOption = 'newest' | 'name' | 'value';
 })
 export class Tab2Page implements OnInit {
   readonly counterService = inject(CounterService);
+  readonly auth = inject(FirebaseAuthService);
+  readonly authError = signal('');
   readonly searchTerm = signal('');
   readonly sortBy = signal<SortOption>('newest');
   readonly clearAlertOpen = signal(false);
@@ -107,6 +110,13 @@ export class Tab2Page implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.counterService.initialize();
+
+    try {
+      await this.auth.initialize();
+    } catch (error) {
+      console.error(error);
+      this.authError.set('Přihlášení se nezdařilo. Zkontrolujte konfiguraci.');
+    }
   }
 
   async remove(id: string): Promise<void> {
